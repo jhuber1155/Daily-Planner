@@ -7,14 +7,15 @@ var iEl = document.createElement("i");
 
 
 
-var currentTime = dayjs();
+var currentTime = dayjs().format("H");
 
-var hourList = [9, 10, 11, 12, 1, 2, 3, 4, 5];
+var hourList = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+console.log(hourList);
 
 function createHourBlock() {
 containerDiv.appendChild(divEl);
 divEl.setAttribute("id", "hourId")
-divEl.setAttribute("class", "row time-block past")
+divEl.setAttribute("class", "row time-block present")
 divEl.appendChild(divEl2);
 divEl2.setAttribute("class", "col-2 col-md-1 hour text-center py-3");
 divEl2.textContent = " ";
@@ -31,7 +32,6 @@ iEl.setAttribute("aria-hidden", "true");
 
 for (var i = 0; i < hourList.length; i++){
   createHourBlock();
-  divEl2.textContent = hourList[i];
 };
 
 
@@ -57,17 +57,21 @@ $(function () {
   // attribute of each time-block be used to do this?
   //
   // TODO: Add code to display the current date in the header of the page.
-  
+  var headerDate = dayjs().format("dddd MMMM, D");
+  $("#currentDay").text(headerDate);
 });
 
-var headerDate = dayjs().format("dddd MMMM, D");
-  $("#currentDay").text(headerDate);
+if (hourList<currentTime){
+  divEl.removeAttribute("class", "present");
+  divEl.setAttribute("class", "past");
+}else if(hourList>currentTime){
+  divEl.removeAttribute("class", "present");
+  divEl.setAttribute("class", "future");
+}
 
 
 
 
 //write a function using > = < when it comes to dayjs and make it equivalent to the time past present future. An example would be if hour<currentimehour then set class past. If hour===currenttimehour the set present. If hour>currenttimehour then set class future.
-
-//class hour =
 
   
