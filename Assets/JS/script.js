@@ -11,15 +11,13 @@ var currentTime = dayjs();
 
 var hourList = [9, 10, 11, 12, 1, 2, 3, 4, 5];
 
-
-
 function createHourBlock() {
 containerDiv.appendChild(divEl);
 divEl.setAttribute("id", "hourId")
 divEl.setAttribute("class", "row time-block past")
 divEl.appendChild(divEl2);
 divEl2.setAttribute("class", "col-2 col-md-1 hour text-center py-3");
-divEl2.textContent = " Hour ";
+divEl2.textContent = " ";
 divEl.appendChild(textAreaEl);
 textAreaEl.setAttribute("class", "col-8 col-md-10 description");
 textAreaEl.setAttribute("rows", "3");
@@ -29,6 +27,11 @@ buttonEl.setAttribute("aria-label", "save");
 buttonEl.appendChild(iEl);
 iEl.setAttribute("class", "fas fa-save");
 iEl.setAttribute("aria-hidden", "true");
+};
+
+for (var i = 0; i < hourList.length; i++){
+  createHourBlock();
+  divEl2.textContent = hourList[i];
 };
 
 
@@ -60,11 +63,11 @@ $(function () {
 var headerDate = dayjs().format("dddd MMMM, D");
   $("#currentDay").text(headerDate);
 
-  createHourBlock();
+
 
 
 //write a function using > = < when it comes to dayjs and make it equivalent to the time past present future. An example would be if hour<currentimehour then set class past. If hour===currenttimehour the set present. If hour>currenttimehour then set class future.
 
 //class hour =
-// for (var i = 0; i < hourList.length; i++)
+
   
