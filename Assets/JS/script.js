@@ -1,6 +1,7 @@
 var divContainer = $(".container-fluid");
 var UserDescription = $("textarea");
 
+//These variables are grabbing the corresponding id in the HTML and allowing me to correctly assign the appropriate time to the planner later with my object.
 var hour9Grab = $("#hour-09");
 var hour10Grab = $("#hour-10");
 var hour11Grab = $("#hour-11");
@@ -11,9 +12,45 @@ var hour15Grab = $("#hour-15");
 var hour16Grab = $("#hour-16");
 var hour17Grab = $("#hour-17");
 
+//This variable is the dayjs current time formatted to be a 24 hour clock which will be used to compare to the hourly planner and used as a metric if the planner is in the past, present or future.
+
+var currentTime = dayjs().format("H");
+
+//This is the variable for the header clock, displaying the correct format as seen in the demonstration.
+var headerDate = dayjs().format("dddd MMMM, D");
+$("#currentDay").text(headerDate);
+
+//This will be the first function running. It will pull any stored notes from local storage and parse them. Then it will store any notes the user saves when click the save function. It will also change the background to the appropriate color based on the time.
+function init(){
+    retrieveNotes();
+    storeNotes();
+    changeBackground();
+};
+//This function will change the background color of the planner hour by comparing the saved hour with the currentTime variable. It will create a variable rows which is grabbing the row class. It then runs a for loop for the length of rows. It takes that array and then looks for the dataset, specifically the hour value. It then compares that hour value to that of currentTime. The use of a string literal is letting us use the literal number to insert itself into the hour id to compare to the current time. It will then add the appropriate class depending on whether that number is smaller, denoting the past, if it is equal, which then indicates the present, or if it is greater which designates it as the future compared to the current time.
+function changeBackground(){
+  var rows = $(".row")
+
+for (i = 0; i < rows.length; i++)
+{
+  var hour = rows[i].dataset.hour;
+ 
+  if (hour < currentTime) {
+    $(`#hour-${hour}`).addClass("past")
+  }
+  if (hour === currentTime) {
+    $(`#hour-${hour}`).addClass("present")
+  }
+  if (hour > currentTime) {
+    $(`#hour-${hour}`).addClass("future")
+  };
+};
+};
+  changeBackground();
+
+  //This is a click button event that creates an object when the save button is clicked on the right hand side.
 divContainer.on("click", ".saveBtn", function(event){
   event.preventDefault();
-
+//When the save button is clicked, it will create an array of variables into an object, one that corresponds with the appropriate hour in which the text was typed into.
   var hourlyNotes = {
     hour9Note: hour9Grab.children().eq(1).val(),
     hour10Note: hour10Grab.children().eq(1).val(),
@@ -26,92 +63,18 @@ divContainer.on("click", ".saveBtn", function(event){
     hour17Note: hour17Grab.children().eq(1).val(),
   };
     console.log(hourlyNotes);
+    //This function will take the notes typed into each hour and put them into the object hourlyNotes and then stringify them with JSON to save them in local storage to be stored and retrieved later.
     function storeNotes(){
     localStorage.setItem("hourlyNotes", JSON.stringify(hourlyNotes));
-    // retrieveNotes();
     };
+    //This function will take the stored notes in local storage, parse them using JSON, and then distribute them into the hourlyNotes object to align with the corresponding hour.
   function retrieveNotes() {
     hourlyNotes = JSON.parse(localStorage.getItem("hourlyNotes"));
   };
-  // changeBackground();
+
   storeNotes();
   retrieveNotes();
 });
 
-var currentTime = dayjs().format("H"); // string
+init();
 
-var headerDate = dayjs().format("dddd MMMM, D");
-$("#currentDay").text(headerDate);
-
-function changeBackground(){
-  var rows = $(".row")
-
-for (i = 0; i < rows.length; i++)
-{
-  var hour = rows[i].dataset.hour;
- 
-  if (hour < currentTime) {
-    $(`#hour-${hour}`).addClass("past")
-    // $('#hour-' + hour).addClass("past")
-  }
-  if (hour === currentTime) {
-    $(`#hour-${hour}`).addClass("present")
-  }
-  if (hour > currentTime) {
-    $(`#hour-${hour}`).addClass("future")
-  }
-}
-};
-
-// function init(){
-  changeBackground();
-//   storeNotes();
-//   retrieveNotes();
-// };
-
-// function retrieveNotes() {
-//   hourlyNotes = JSON.parse(localStorage.getItem("hourlyNotes"));
-//   };
-
-// function storeNotes(){
-//   localStorage.setItem("hourlyNotes", JSON.stringify(hourlyNotes));
-//   retrieveNotes();
-//   console.log(retrieveNotes);
-//   };
-
-
-// init();
-
-
-
-  // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
-
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-
-
-  
- 
-
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-
-
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-
-  
-
-  // TODO: Add code to display the current date in the header of the page.
